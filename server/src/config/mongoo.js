@@ -1,0 +1,1 @@
+module.exports = 'mongodb://hoolaidev:hoolaiwebdev@10.2.13.200:12345/hoolai-web-dev';
