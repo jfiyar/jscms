@@ -3,6 +3,7 @@ import { Form, Input, Icon, Button ,Spin,message} from 'antd';
 import styled from 'styled-components';
 import request from '@/utils/Request';
 import { Redirect,Link } from 'react-router-dom';
+import md5 from 'md5';
 
 
 
@@ -75,20 +76,21 @@ class Login extends Component {
             this.setState({loading:true});
             try{
                 const data = await (
-                    await request('/api/admin/login', {
+                    await request('/open/login', {
                         method: 'post',
-                        headers: new Headers({ 'Content-Type': 'application/json' }),
-                        body: JSON.stringify(val)
+                        body: `code=${val.code}&password=${md5(val.password)}`,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        }
                     })
                 ).json();
                 this.setState({ loading: false });
-                if (data.code === 0) {
+                if (data.code === 200) {
                     this.setState({ hide: true });
                     this.timeout = setTimeout(() => {
                         localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('name', val.name);
                         this.setState({ login: true });
-                    }, 600);
+                    }, 0);
                     return;
                 }
                 message.error(data.message);
@@ -113,17 +115,17 @@ class Login extends Component {
                 <Form className="form" onSubmit={this.submit}>
                     <Spin spinning={this.state.loading} tip=" 确 认 身 份 i n g ~ ~ ~ " >
                     <Item className="name">
-                        XX后台管理系统
+                        作业评阅系统
                     </Item>
                         <Item>
                             {
-                                getFieldDecorator('name', { rules: [{ required: true, message: '快输入你的账号' }] })(
+                                getFieldDecorator('code', { rules: [{ required: true, message: '快输入你的账号' }] })(
                                     <Input prefix={<Icon type="user" />} type="text" placeholder="这er输入账号" />
                                 )
                             }
                         </Item>
                         <Item style={{marginBottom:0}}>
-                            {getFieldDecorator('pwd', {
+                            {getFieldDecorator('password', {
                                 rules: [{ required: true, message: '不输密码我信你个鬼' }],
                             })(
                                 <Input prefix={<Icon type="lock" />} type="password" placeholder="密码看这er" />
@@ -132,7 +134,6 @@ class Login extends Component {
                         <Link style={{lineHeight:'36px'}} to="/retrieve">我忘了~</Link>
                         <Item>
                             <Button block type="primary" htmlType="submit">~ 走 ~ 你 ~</Button>
-                            <Link style={{ float: 'right' }} to="/register">没有账号！</Link>
                         </Item>
                     </Spin>
                 </Form>

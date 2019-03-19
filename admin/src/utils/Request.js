@@ -9,7 +9,7 @@
  */
 
 export default function(...args){
-    var baseUrl='http://10.2.13.233:8080'
+    var baseUrl='http://localhost:8080'
     if(typeof args[0] === 'string'){
         args[0]=baseUrl+args[0];
     }else if(typeof args[0].url === 'string'){
