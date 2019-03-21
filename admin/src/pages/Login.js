@@ -89,6 +89,11 @@ class Login extends Component {
                     this.setState({ hide: true });
                     this.timeout = setTimeout(() => {
                         localStorage.setItem('token', data.data.token);
+                        localStorage.setItem('auth', data.data.auth);
+                        localStorage.setItem('code', data.data.code);
+                        localStorage.setItem('id', data.data.id);
+                        localStorage.setItem('sex', data.data.sex);
+                        localStorage.setItem('username', data.data.username);
                         this.setState({ login: true });
                     }, 0);
                     return;
@@ -101,6 +106,7 @@ class Login extends Component {
         })
     };
     componentDidMount(){
+        localStorage.clear();
         setTimeout(()=>{
             this.setState({ hide: false });
         },10)
@@ -108,7 +114,7 @@ class Login extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         if (this.state.login) {
-            return <Redirect to="/admin" />
+            return <Redirect to="/auth" />
         }
         return (
             <Styled hide={this.state.hide}>
